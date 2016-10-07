@@ -1,0 +1,40 @@
+#!/bin/bash
+#check if new episodes are out!
+#cat n grep the rss feed
+set -e
+FEED_FILE="feed"
+LOOK_FILE="look_for"
+
+#colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+#read array to look for from the look file
+readarray LOOK_FOR < "$LOOK_FILE"
+
+#remove newlines/carriage return
+INDEX=0
+while [ $INDEX -lt ${#LOOK_FOR[@]} ]; do
+    LOOK_FOR[$INDEX]="$(echo ${LOOK_FOR[$INDEX]} | sed 's/\r//')"
+    INDEX=$((INDEX+1))
+done
+
+FEED_URL="${LOOK_FOR[0]}"
+wget -c -O "$FEED_FILE" "$FEED_URL"
+
+#iterate the feed and report
+INDEX=1
+while [ $INDEX -lt ${#LOOK_FOR[@]} ]; do
+    KEYWORD="${LOOK_FOR[$INDEX]}"
+    echo -ne "looking for ${BLUE}$KEYWORD${NC}  "
+    if [ "$(cat $FEED_FILE | grep -i '$KEYWORD')" ]; then
+        echo -e "${GREEN}new release!${NC}"
+    else
+        echo -e "${RED}not found!${NC}"
+    fi
+    INDEX=$((INDEX+1))
+done
+
+exit
