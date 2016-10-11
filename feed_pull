@@ -29,7 +29,7 @@ INDEX=1
 while [ $INDEX -lt ${#LOOK_FOR[@]} ]; do
     KEYWORD="${LOOK_FOR[$INDEX]}"
     echo -ne "looking for ${BLUE}$KEYWORD${NC}  "
-    if [ "$(cat $FEED_FILE | grep -i '$KEYWORD')" ]; then
+    if [ "$(cat $FEED_FILE | grep -i $KEYWORD)" ]; then
         echo -e "${GREEN}new release!${NC}"
     else
         echo -e "${RED}not found!${NC}"
