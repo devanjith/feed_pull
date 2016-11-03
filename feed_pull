@@ -37,4 +37,6 @@ while [ $INDEX -lt ${#LOOK_FOR[@]} ]; do
     INDEX=$((INDEX+1))
 done
 
+rm -r $FEED_FILE
+
 exit
